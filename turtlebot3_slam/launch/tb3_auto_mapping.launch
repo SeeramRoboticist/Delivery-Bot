@@ -1,0 +1,11 @@
+<launch>
+
+  <!-- To bringup  TB3 and world -->
+  <include file="$(find turtlebot3_gazebo)/launch/turtlebot3_house.launch">
+  </include>
+
+  <!-- To Bringup SLAM and Map -->
+  <include file="$(find turtlebot3_slam)/launch/turtlebot3_auto_slam.launch">
+  </include>
+
+</launch>
