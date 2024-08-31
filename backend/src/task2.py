@@ -179,6 +179,6 @@ if __name__ == "__main__":
     Registering the node and creating 
     object for class and spining to do operation 'n' times.
     """
-    rospy.init_node("task1", anonymous=True)
+    rospy.init_node("task2", anonymous=True)
     obj = deliver2()
     obj.main_process()
