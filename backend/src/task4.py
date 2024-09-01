@@ -38,9 +38,6 @@ class deliver3:
         self.confirm_table = None
         self.cancelled = None
 
-
-
-
     def navigate_with_postion(self, name):
 
         """
@@ -56,8 +53,7 @@ class deliver3:
         self.movebase_publish(self.goals[name]["x"], self.goals[name]["y"], self.goals[name]["z"],
                                 self.goals[name]["w"])
         
-        while not self.nav_result: # To hold the process till the nav is finished
-            
+        while not self.nav_result: # To hold the process while navigating and check if the operation is cancelled.
             if self.cancelled:
                 return "cancelled"
             
@@ -88,13 +84,14 @@ class deliver3:
         Move base result callback to understand 
         robot goal has been reached.
         """
+        # Modified in a way to understand the operation based on status
+
         if nav_result.status.status == 2:
             self.cancelled = True
-            print("cancelled")
+            print("Operation cancelled\n")
             
         if nav_result.status.status == 3:
             self.nav_result = True
-            print("reached")
 
     def confirmation_cb(self, confirmation):
 
