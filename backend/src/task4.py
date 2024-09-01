@@ -36,6 +36,8 @@ class deliver3:
         self.current_process = None
         self.confirm_kitchen = None
         self.confirm_table = None
+        self.cancelled = None
+
 
 
 
@@ -47,6 +49,7 @@ class deliver3:
         to that position.
         """
         self.nav_result = False
+        self.cancelled = False
 
         print(f"Navigating to -> -> {name}\n")
 
@@ -54,9 +57,13 @@ class deliver3:
                                 self.goals[name]["w"])
         
         while not self.nav_result: # To hold the process till the nav is finished
-            pass
+            
+            if self.cancelled:
+                return "cancelled"
             
         print(f"Reached -> -> {name}\n")
+        return "done"
+
 
     def movebase_publish(self, goal_x, goal_y, goal_z, goal_w):
 
@@ -81,8 +88,13 @@ class deliver3:
         Move base result callback to understand 
         robot goal has been reached.
         """
-        if nav_result.status.text == "Goal reached.":
+        if nav_result.status.status == 2:
+            self.cancelled = True
+            print("cancelled")
+            
+        if nav_result.status.status == 3:
             self.nav_result = True
+            print("reached")
 
     def confirmation_cb(self, confirmation):
 
@@ -115,9 +127,18 @@ class deliver3:
         while not rospy.is_shutdown():
 
             if len(self.order_list) > 0:
-                self.navigate_with_postion("kitchen")
-                self.current_process = "kitchen"
-                return
+
+                result = self.navigate_with_postion("kitchen")
+
+                if result == 'done':
+                    self.current_process = "kitchen"
+                    return
+                
+                if result == "cancelled":
+                    time.sleep(2)
+                    self.navigate_with_postion("home")
+                    self.current_process = "home"
+                    return
             
     def kitchen(self):
 
@@ -139,9 +160,18 @@ class deliver3:
                 return
             
             if self.confirm_kitchen == True:
-                self.navigate_with_postion("table1")
-                self.current_process = "table"
-                return
+                result = self.navigate_with_postion("table1")
+
+                if result == "done":
+                    self.current_process = "table"
+                    return
+                
+                if result == "cancelled":
+                    self.navigate_with_postion("kitchen")
+                    time.sleep(self.wait_for)
+                    self.navigate_with_postion("home")
+                    self.current_process = "home"
+                    return
 
     def table(self): 
 
