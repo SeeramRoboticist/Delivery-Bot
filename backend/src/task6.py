@@ -214,7 +214,7 @@ class deliver6:
 
         rospy.logwarn("Waiting for confirmation\n")
 
-        while (wait_time < time.time()) and (not self.confirm_table):
+        while (time.time() < wait_time) and (not self.confirm_table):
 
             if self.confirm_table:
                 return "order submitted"
