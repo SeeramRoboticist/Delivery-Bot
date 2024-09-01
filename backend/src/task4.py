@@ -10,7 +10,7 @@ import time
 # For Changing type from string to Orginal list
 import ast
 
-class deliver3:
+class deliver4:
 
     def __init__(self) -> None:
 
@@ -225,6 +225,6 @@ if __name__ == "__main__":
     Registering the node and creating 
     object for class and spining to do operation 'n' times.
     """
-    rospy.init_node("task3", anonymous=True)
-    obj = deliver3()
+    rospy.init_node("task4", anonymous=True)
+    obj = deliver4()
     obj.main_process()
